@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    int start, end, i, j;
+    int sum;
+
+    printf("Enter the range to find perfect numbers (start end): ");
+    scanf("%d %d", &start, &end);
+
+    printf("Perfect numbers between %d and %d are: \n", start, end);
+
+    for(i=start; i<=end; i++) {
+        sum = 1;
+        for(j=2; j<=sqrt(i); j++) {
+            if(i % j == 0) {
+                sum += j;
+                if(j != (i / j)) {
+                    sum += (i / j);
+                }
+            }
+        }
+        if(sum == i) {
+            printf("%d\n", i);
+        }
+    }
+
+    return 0;
+}
