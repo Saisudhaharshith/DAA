@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define MAX_ITEMS 100
+#define MAX_WEIGHT 100
+
+// Item structure
+struct Item {
+    int value, weight;
+    double ratio;
+} items[MAX_ITEMS];
+
+// Comparison function for qsort()
+int cmp(const void* a, const void* b) {
+    return ((struct Item*)b)->ratio - ((struct Item*)a)->ratio;
+}
+
+void knapsack(int n, int capacity) {
+    int i, j;
+    int value = 0, weight = 0;
+    bool taken[MAX_ITEMS];
+    memset(taken, 0, sizeof(taken));
+
+    // Sort items by value-to-weight ratio
+    for (i = 0; i < n; i++)
+        items[i].ratio = (double) items[i].value / items[i].weight;
+    qsort(items, n, sizeof(struct Item), cmp);
+
+    // Take items in order of highest ratio
+    for (i = 0; i < n; i++) {
+        if (weight + items[i].weight <= capacity) {
+            taken[i] = true;
+            value += items[i].value;
+            weight += items[i].weight;
+        }
+    }
+
+    // Print result
+    printf("Selected items:\n");
+    for (i = 0; i < n; i++)
+        if (taken[i])
+            printf("  Value: %d, Weight: %d\n", items[i].value, items[i].weight);
+    printf("Total value: %d\n", value);
+    printf("Total weight: %d\n", weight);
+}
+
+int main() {
+    int n, capacity;
+
+    printf("Enter number of items: ");
+    scanf("%d", &n);
+    printf("Enter knapsack capacity: ");
+    scanf("%d", &capacity);
+
+    printf("Enter item values and weights:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d %d", &items[i].value, &items[i].weight);
+
+    knapsack(n, capacity);
+    return 0;
+}
